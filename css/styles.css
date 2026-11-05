@@ -1,0 +1,450 @@
+/* ==========================================================
+   1. TOKENS DE DISEÑO (variables globales)
+   ========================================================== */
+:root {
+  --bg:        #FFF4DC;   /* fondo crema */
+  --surface:   #FFFFFF;   /* tarjetas */
+  --ink:       #111111;   /* texto y bordes */
+  --muted:     #5B5B5B;   /* texto secundario */
+  --accent:    #FFD23F;   /* amarillo: botón principal */
+  --accent-2:  #7C5CFF;   /* violeta: enlaces y acentos */
+  --ok:        #2BB673;   /* verde éxito */
+  --danger:    #FF4D6D;   /* rosa/rojo error */
+  --danger-soft: #FFE3E9; /* fondo claro del error */
+  --terminal:  #111111;   /* fondo consola */
+  --terminal-text: #B8FFB8;
+
+  --border:    3px solid var(--ink);
+  --shadow:    6px 6px 0 var(--ink);
+  --shadow-sm: 3px 3px 0 var(--ink);
+  --radius:    10px;
+}
+
+/* ==========================================================
+   2. BASE Y TIPOGRAFÍA
+   ========================================================== */
+* { box-sizing: border-box; }
+
+html { color-scheme: light; }
+
+body {
+  margin: 0;
+  padding: 28px 14px 56px;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+h1, h2, .titulo-tipo {
+  font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+/* Etiqueta accesible oculta (lectores de pantalla) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Utilidad para mostrar/ocultar bloques */
+.oculto { display: none !important; }
+
+/* ==========================================================
+   3. CONTENEDOR PRINCIPAL
+   ========================================================== */
+.container {
+  max-width: 560px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  overflow: hidden;      /* recorta las esquinas de la franja amarilla */
+}
+
+/* ==========================================================
+   4. ENCABEZADO (franja amarilla)
+   ========================================================== */
+.cabecera {
+  background: var(--accent);
+  border-bottom: var(--border);
+  padding: 22px 24px;
+}
+
+.cabecera h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 6vw, 1.9rem);
+  line-height: 1.1;
+}
+
+.subtitulo {
+  margin: 8px 0 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+/* ==========================================================
+   5. BARRA DE BÚSQUEDA (input + botón unidos)
+   ========================================================== */
+.buscador {
+  margin: 22px 24px 0;
+}
+
+.barra-busqueda {
+  display: flex;
+  align-items: stretch;
+}
+
+#username {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 16px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--border);
+  border-right: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#username::placeholder {
+  color: #6B6B6B;
+  opacity: 1;
+}
+
+/* Foco claro y visible, con sombra dura violeta */
+#username:focus {
+  outline: none;
+  background: #FFFBE8;
+  box-shadow: var(--shadow-sm);
+  box-shadow: 3px 3px 0 var(--accent-2);
+}
+
+#buscar {
+  padding: 13px 22px;
+  font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--accent);
+  border: var(--border);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+              background-color 0.12s ease;
+}
+
+/* Hover: se desplaza y crece la sombra */
+#buscar:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+/* Activo: se hunde y la sombra desaparece */
+#buscar:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+/* Foco de teclado visible */
+#buscar:focus-visible {
+  outline: 3px solid var(--accent-2);
+  outline-offset: 3px;
+}
+
+/* Deshabilitado: gris, sin sombra, cursor de no permitido */
+#buscar:disabled {
+  background: #D9D9D9;
+  color: var(--muted);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* ==========================================================
+   6. INDICADOR DE CARGA (tres puntos animados, CSS puro)
+   ========================================================== */
+.loading {
+  margin: 14px 0 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.puntos span {
+  display: inline-block;
+  animation: parpadear 1.2s infinite both;
+}
+
+.puntos span:nth-child(2) { animation-delay: 0.2s; }
+.puntos span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes parpadear {
+  0%, 60%, 100% { opacity: 0.25; }
+  30%           { opacity: 1; }
+}
+
+/* ==========================================================
+   7. CAJA DE ERROR
+   ========================================================== */
+.error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 24px;
+  padding: 14px 16px;
+  background: var(--danger-soft);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  font-weight: 700;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* Ícono a la izquierda; el mensaje se inyecta como texto en #error */
+.error::before {
+  content: "⚠️";
+  font-size: 1.3rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   8. RESULTADO (tarjeta vertical)
+   ========================================================== */
+.resultado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 24px;
+  padding: 24px 20px;
+  text-align: center;
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Marco del avatar: cuadrado con esquinas redondeadas */
+.avatar-marco {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border: var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--accent) 0 12px,
+    #FFE68A 12px 24px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Respaldo si el avatar no carga (evento onerror) */
+.avatar-marco.sin-avatar::after {
+  content: "👤";
+  font-size: 2.6rem;
+}
+
+.nombre {
+  margin: 0;
+  font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+  font-weight: 900;
+  font-size: 1.55rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.fila-repos {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Etiqueta (badge) violeta con el número de repos */
+.badge {
+  display: inline-block;
+  padding: 5px 16px;
+  background: var(--accent-2);
+  color: #FFFFFF;
+  font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+  font-size: 1.2rem;    /* ≥ 18.66px en negrita: texto grande (AA) */
+  font-weight: 900;
+  border: var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.repos-texto {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Botón-enlace al perfil */
+.perfil {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 11px 18px;
+  background: var(--accent-2);
+  color: #FFFFFF;
+  font-family: "Arial Black", "Helvetica Neue", Impact, sans-serif;
+  font-size: 1.2rem;    /* ≥ 18.66px en negrita: texto grande (AA) */
+  font-weight: 900;
+  text-decoration: none;
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.perfil:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.perfil:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.perfil:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ==========================================================
+   9. CONSOLA DE EVENTOS (estilo terminal)
+   ========================================================== */
+.consola {
+  margin: 20px 24px 24px;
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  background: var(--terminal);
+}
+
+.consola-barra {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  background: #2B2B2B;
+  border-bottom: var(--border);
+}
+
+.punto {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.punto--rojo     { background: var(--danger); }
+.punto--amarillo { background: var(--accent); }
+.punto--verde    { background: var(--ok); }
+
+#log {
+  max-height: 140px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--terminal-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.log-linea { margin: 0 0 4px; }
+.log-linea.info  { color: var(--terminal-text); }
+.log-linea.ok    { color: #5DFF9D; }
+.log-linea.error { color: #FF7A9C; }
+
+/* ==========================================================
+   10. ANIMACIONES DE APARICIÓN (≤ 250 ms)
+   ========================================================== */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.resultado:not(.oculto),
+.error:not(.oculto) {
+  animation: aparecer 220ms ease-out both;
+}
+
+/* Personas que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================
+   11. RESPONSIVE (móvil desde 320 px)
+   ========================================================== */
+@media (max-width: 480px) {
+  body { padding: 18px 10px 40px; }
+
+  .cabecera { padding: 18px 16px; }
+
+  .buscador,
+  .resultado,
+  .error,
+  .consola {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  /* La barra de búsqueda se apila: input arriba, botón abajo */
+  .barra-busqueda { flex-direction: column; }
+
+  #username {
+    border-right: var(--border);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  #buscar {
+    width: 100%;
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+
+  .badge, .perfil { font-size: 1.1rem; }
+}
